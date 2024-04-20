@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Polaroid Store</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f0e6f4; /* pastel purple */
+    margin: 0;
+    padding: 0;
+  }
+  nav {
+    background-color: #ffc3a0; /* pastel orange */
+    padding: 10px;
+    text-align: center;
+  }
+  nav button {
+    background-color: #ffcccc; /* pastel pink */
+    border: none;
+    padding: 10px 20px;
+    margin: 0 10px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  .container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 0 20px;
+  }
+  .product {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: #ffcccc; /* pastel pink */
+    border-radius: 5px;
+  }
+  .product img {
+    max-width: 200px;
+    margin-right: 20px;
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <button id="homeBtn">Home</button>
+  <button id="productBtn">Product</button>
+  <button id="wishlistBtn">Wishlist</button>
+  <button id="cartBtn">Shopping Cart</button>
+  <button id="contactBtn">Contact Us</button>
+</nav>
+
+<div id="content" class="container">
+  <h1>Welcome to our Polaroid Store!</h1>
+  <p>We offer a variety of Polaroid cameras and films to capture your precious moments.</p>
+</div>
+
+<script>
+  document.getElementById("homeBtn").addEventListener("click", function() {
+    document.getElementById("content").innerHTML = `
+      <div class="container">
+        <h1>Welcome to our Polaroid Store!</h1>
+        <p>We offer a variety of Polaroid cameras and films to capture your precious moments.</p>
+        <img src="polaroid1.jpg" alt="Polaroid 1">
+        <img src="polaroid2.jpg" alt="Polaroid 2">
+      </div>`;
+  });
+
+  document.getElementById("productBtn").addEventListener("click", function() {
+    document.getElementById("content").innerHTML = `
+      <div class="container">
+        <h1>Our Products</h1>
+        <div class="product">
+          <img src="product1.jpg" alt="Product 1">
+          <div>
+            <p>Product Name 1</p>
+            <p>$19.99</p>
+            <button onclick="addToWishlist(1)">Add to Wishlist</button>
+            <button onclick="addToCart(1)">Add to Cart</button>
+          </div>
+        </div>
+        <div class="product">
+          <img src="product2.jpg" alt="Product 2">
+          <div>
+            <p>Product Name 2</p>
+            <p>$24.99</p>
+            <button onclick="addToWishlist(2)">Add to Wishlist</button>
+            <button onclick="addToCart(2)">Add to Cart</button>
+          </div>
+        </div>
+        <div class="product">
+          <img src="product3.jpg" alt="Product 3">
+          <div>
+            <p>Product Name 3</p>
+            <p>$29.99</p>
+            <button onclick="addToWishlist(3)">Add to Wishlist</button>
+            <button onclick="addToCart(3)">Add to Cart</button>
+          </div>
+        </div>
+        <div class="product">
+          <img src="product4.jpg" alt="Product 4">
+          <div>
+            <p>Product Name 4</p>
+            <p>$39.99</p>
+            <button onclick="addToWishlist(4)">Add to Wishlist</button>
+            <button onclick="addToCart(4)">Add to Cart</button>
+          </div>
+        </div>
+      </div>`;
+  });
+
+  document.getElementById("wishlistBtn").addEventListener("click", function() {
+    // Fetch wishlist items from storage and display
+    let wishlistItems = JSON.parse(localStorage.getItem("wishlist")) || [];
+    let content = `<div class="container"><h1>Wishlist</h1>`;
+    content += `<p>${wishlistItems.length} items in your wishlist.</p>`;
+    wishlistItems.forEach(item => {
+      content += `<div class="product">
+                    <img src="product${item}.jpg" alt="Product ${item}">
+                    <div>
+                      <p>Product Name ${item}</p>
+                      <p>$${(item + 15).toFixed(2)}</p>
+                    </div>
+                  </div>`;
+    });
+    content += `</div>`;
+    document.getElementById("content").innerHTML = content;
+  });
+
+  document.getElementById("cartBtn").addEventListener("click", function() {
+    // Fetch cart items from storage and display
+    let cartItems = JSON.parse(localStorage.getItem("cart")) || [];
+    let total = 0;
+    let content = `<div class="container"><h1>Shopping Cart</h1>`;
+    if (cartItems.length === 0) {
+      content += `<p>Your shopping cart is empty.</p>`;
+    } else {
+      content += `<ul>`;
+      cartItems.forEach(item => {
+        total += item + 15; // Dummy price calculation
+        content += `<li>Product Name ${item} - $${(item + 15).toFixed(2)}</li>`;
+      });
+      content += `</ul>`;
+      content += `<p>Total: $${total.toFixed(2)}</p>`;
+    }
+    content += `</div>`;
+    document.getElementById("content").innerHTML = content;
+  });
+
+  document.getElementById("contactBtn").addEventListener("click", function() {
+    document.getElementById("content").innerHTML = `
+      <div class="container">
+        <h1>Contact Us</h1>
+        <form>
+          <label for="name">Name:</label><br>
+          <input type="text" id="name" name="name" required><br>
+          <label for="email">Email:</label><br>
+          <input type="email" id="email" name="email" required><br>
+          <label for="message">Message:</label><br>
+          <textarea id="message" name="message" rows="4" required></textarea><br><br>
+          <button type="submit">Submit</button>
+        </form>
+      </div>`;
+  });
+
+  function addToWishlist(productId) {
+    let wishlistItems = JSON.parse(localStorage.getItem("wishlist")) || [];
+    if (!wishlistItems.includes(productId)) {
+      wishlistItems.push(productId);
+      localStorage.setItem("wishlist", JSON.stringify(wishlistItems));
+      alert("Added to wishlist!");
+    } else {
+      alert("This item is already in your wishlist!");
+    }
+  }
+
+  function addToCart(productId) {
+    let cartItems = JSON.parse(localStorage.getItem("cart")) || [];
+    cartItems.push(productId);
+    localStorage.setItem("cart", JSON.stringify(cartItems));
+    alert("Added to cart!");
+  }
+</script>
+
+</body>
+</html>
